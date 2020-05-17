@@ -32,6 +32,12 @@
 
 ;;(use-package lustre-mode)
 
+;; Byte-compile lustre.el to speed-up
+;; the loading of a lustre source file :
+
+;; M-x byte-compile-file  -> lustre.el
+
+
 ;;;; Usage
 
 ;; This is a major moding for editing lustre files
@@ -641,6 +647,7 @@
 
    Special Commands :
      C-c C-r : execute a lustre file
+     f10 : execute a lustre file
 
    Customisable variables :
 
@@ -650,7 +657,7 @@
      - lustre-executer-name:
          Name of the lustre model checker to call. (default: 'jkind')
 
-   File bug reports on github
+   File bug reports on github https://github.com/SamuelFountain/lustre-mode/
 
 
 \\{lustre-mode-map}"
