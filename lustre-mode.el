@@ -22,13 +22,7 @@
 
 ;;;;; Manual
 
-;; Install these required packages:
-
-;; + font-lock
-;; + cl-lib
-
-
-;; Then put this file in your load-path, and put this in your init
+;; Put this file in your load-path, and put this in your init
 ;; file: lustre-mode.el
 
 ;; (require 'lustre-mode)
