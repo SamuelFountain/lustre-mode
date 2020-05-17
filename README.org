@@ -94,13 +94,12 @@ Modified by Nicolas Berthier
 http://www-verimag.imag.fr/DIST-TOOLS/SYNCHRONE/lustre-v6/doc/lustre.el
 
 Their work has been modified and released under the terms of their
-license.which showed me how to bifurcate, and bar, which takes care of
-flanges.
+license.
 
 * Development
 
 Bug reports, feature requests, suggestions — oh my!
-** TODO
+** TO DO List
 - Unit Tests
 - Integration tests
 - Compile Mode
