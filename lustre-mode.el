@@ -22,9 +22,10 @@
 
 ;;;;; Manual
 
-;; Put this file in your load-path, and put this in your init
+;; Put this file in your load-path
 ;; file: lustre-mode.el
 
+;; and put this in your init
 ;; (require 'lustre-mode)
 
 ;; Alternativly if using use-package
@@ -33,9 +34,9 @@
 
 ;;;; Usage
 
-;; Run one of these commands:
-
-;; `lustre-mode-command': Frobnicate the flange.
+;; This is a major moding for editing lustre files
+;; activate it with `lustre-mode' but the mode should
+;; activate by default in `.lus' files
 
 ;;;; Tips
 
@@ -50,8 +51,7 @@
 ;; http://www-verimag.imag.fr/DIST-TOOLS/SYNCHRONE/lustre-v6/doc/lustre.el
 
 ;; Their work has been modified and released under
-;; the terms of their GNU GPL V2 and the option has been taken
-;; to use a later version of the license.
+;; the terms of their license.
 
 ;;; License:
 
