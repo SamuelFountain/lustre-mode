@@ -1,2 +1,116 @@
-* lustre-mode
-LUSTRE-MODE is a major Emacs mode for editing Lustre.
+#+TITLE: lustre-mode
+
+#+PROPERTY: LOGGING nil
+
+# Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
+
+# file:https://melpa.org/packages/package-name-badge.svg # file:https://stable.melpa.org/packages/package-name-badge.svg
+* Contents                                                         :noexport:
+:PROPERTIES:
+:TOC:      :include siblings
+:END:
+:CONTENTS:
+- [[#installation][Installation]]
+- [[#usage][Usage]]
+- [[#changelog][Changelog]]
+- [[#credits][Credits]]
+- [[#development][Development]]
+- [[#license][License]]
+:END:
+
+* Installation
+:PROPERTIES:
+:TOC:      :depth 0
+:END:
+
+** MELPA
+
+  # If you installed from MELPA, you're done.  Just run one of the commands below.
+TODO add to MELPA
+
+** Manual
+Put this file in your load-path
+
+file: =lustre-mode.el=
+
+and put this in your init
+
+#+BEGIN_SRC emacs-lsip
+(require 'lustre-mode)
+#+END_SRC
+
+Alternativly if using use-package, put this in your init
+#+BEGIN_SRC emacs-lsip
+(use-package lustre-mode)
+#+END_SRC
+
+Byte-compile lustre.el to speed-up
+the loading of a lustre source file :
+#+BEGIN_SRC
+M-x byte-compile-file <RET> lustre.el <RET>
+#+END_SRC
+
+
+* Usage
+:PROPERTIES:
+:TOC:      :depth 0
+:END:
+
+lustre-mode is a major mode for editing lustre files. To run the lustre
+file run with either ~C-c C-r~ or ~f10~
+
+
+** Tips
+
++ You can customize settings in the lustre-mode group.
+
+*** lustre-mode-comment-ind-level
+Is a setting that determins how many spaces to indent a comment.
+
+*** lustre-mode-executer-name
+Name of the lustre executor. Defaults to jkind. Assumes that jkind in in your path.
+
+[[http://loonwerks.com/tools/jkind.html][Jkind Loonwerks]]
+* Changelog
+:PROPERTIES:
+:TOC:      :depth 0
+:END:
+
+** 2.0.0
+Initial release.
+
+Changes from Nicolas Berthier Version 1.3
+- Enabled lexical binding
+- updated ~cl~ use to ~cl-lib~
+- changed to lustre-mode from lustre and updated necessary names
+- added lustre-mode-run and C-c C-r and f10 to run it
+- Changed to use ~define-derived-mode~ and inherit from prog-mode
+- Removed a number of functions from being interactive
+* Credits
+
+Based off of work done by Chevallier Olivier
+https://matthieu-moy.fr/emacs/lustre.el
+
+Modified by Nicolas Berthier
+http://www-verimag.imag.fr/DIST-TOOLS/SYNCHRONE/lustre-v6/doc/lustre.el
+
+Their work has been modified and released under the terms of their
+license.
+
+* Development
+
+Bug reports, feature requests, suggestions — oh my!
+** TO DO List
+- Unit Tests
+- Integration tests
+- Compile Mode
+* License
+
+GPLv3
+
+# Local Variables:
+# eval: (require 'org-make-toc)
+# before-save-hook: org-make-toc
+# org-export-with-properties: ()
+# org-export-with-title: t
+# End:
