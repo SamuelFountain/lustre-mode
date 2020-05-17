@@ -4,7 +4,7 @@
 
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
-
+# file:https://melpa.org/packages/package-name-badge.svg # file:https://stable.melpa.org/packages/package-name-badge.svg
 * Contents                                                         :noexport:
 :PROPERTIES:
 :TOC:      :include siblings
@@ -25,7 +25,8 @@
 
 ** MELPA
 
-If you installed from MELPA, you're done.  Just run one of the commands below.
+  # If you installed from MELPA, you're done.  Just run one of the commands below.
+TODO add to MELPA
 
 ** Manual
 Put this file in your load-path
