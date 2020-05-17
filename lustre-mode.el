@@ -1,36 +1,40 @@
-;;; lustre-mode.el --- Package description (don't include the word "Emacs")  -*- lexical-binding: t; -*-
+;;; lustre-mode.el --- Major mode for editing lustre source in Emacs  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017 First Last
+;; Copyright (C) 2020 Samuel Fountain
 
-;; Author: First Last <name@example.com>
-;; URL: http://example.com/lustre-mode.el
-;; Version: 0.1-pre
+;; Author: Samuel Fountain <16006711+SamuelFountain@users.noreply.github.com >
+;; URL: https://github.com/SamuelFountain/lustre-mode
+;; Version: 2.1
 ;; Package-Requires: ((emacs "25.2"))
-;; Keywords: something
+;; Keywords: lustre
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
-;; This is my package.  It is nice.  You should try it.
+
 
 ;;;; Installation
 
 ;;;;; MELPA
 
-;; If you installed from MELPA, you're done.
+;; TODO add package to MELPA
 
 ;;;;; Manual
 
 ;; Install these required packages:
 
-;; + foo
-;; + bar
+;; + font-lock
+
 
 ;; Then put this file in your load-path, and put this in your init
-;; file:
+;; file: lustre-mode.el
 
 ;; (require 'lustre-mode)
+
+;; Alternativly if using use-package
+
+;;(use-package lustre-mode)
 
 ;;;; Usage
 
@@ -44,12 +48,15 @@
 
 ;;;; Credits
 
-;; This package would not have been possible without the following
-;; packages: foo[1], which showed me how to bifurcate, and bar[2],
-;; which takes care of flanges.
-;;
-;;  [1] https://example.com/foo.el
-;;  [2] https://example.com/bar.el
+;; Based off of work done by Chevallier Olivier
+;; https://matthieu-moy.fr/emacs/lustre.el
+
+;; Modified by Nicolas Berthier
+;; http://www-verimag.imag.fr/DIST-TOOLS/SYNCHRONE/lustre-v6/doc/lustre.el
+
+;; Their work has been modified and released under
+;; the terms of their GNU GPL V2 and the option has been taken
+;; to use a later version of the license.
 
 ;;; License:
 
@@ -68,22 +75,24 @@
 
 ;;; Code:
 
+(defconst lustre-mode-version "2.1")
+
 ;;;; Requirements
 
-(require 'foo)
-(require 'bar)
+(require 'font-lock)
 
 ;;;; Customization
 
 (defgroup lustre-mode nil
-  "Settings for `lustre-mode'."
-  :link '(url-link "http://example.com/lustre-mode.el"))
+  "Settings for `lustre-mode'.")
 
-(defcustom lustre-mode-something nil
-  "This setting does something."
-  :type 'something)
+(defcustom lustre-comment-ind-level 2
+  "*How many spaces to indent a comment."
+  :type '(integer)
+  :group 'lustre-mode)
 
 ;;;; Variables
+
 
 (defvar lustre-mode-var nil
   "A variable.")
@@ -92,37 +101,20 @@
 
 ;; This technique makes it easier and less verbose to define keymaps.
 
-(defvar lustre-mode-map
-  ;; This makes it easy and much less verbose to define keys
-  (let ((map (make-sparse-keymap "lustre-mode map"))
-        (maps (list
-               ;; Mappings go here, e.g.:
-               "RET" #'lustre-mode-RET-command
-               [remap search-forward] #'lustre-mode-search-forward
-               )))
-    (cl-loop for (key fn) on maps by #'cddr
-             do (progn
-                  (when (stringp key)
-                    (setq key (kbd key)))
-                  (define-key map key fn)))
-    map))
+(defvar lustre-mode-map nil
+  "Keymap for lustre major mode.")
+(unless lustre-mode-map
+  (setq lustre-mode-map (make-sparse-keymap))
+  ()
+  )
 
 ;;;; Functions
 
 ;;;;; Commands
 
-;;;###autoload
-(defun lustre-mode-command (args)
-  "Frobnicate the flange."
-  (interactive)
-  (lustre-mode--something)
-  (bar))
 
 ;;;;; Support
 
-(defun lustre-mode--something (args)
-  "This function helps frobnicate the flange."
-  (foo))
 
 ;;;; Footer
 
