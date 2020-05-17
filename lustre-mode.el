@@ -4,7 +4,7 @@
 
 ;; Author: Samuel Fountain <16006711+SamuelFountain@users.noreply.github.com >
 ;; URL: https://github.com/SamuelFountain/lustre-mode
-;; Version: 2.1
+;; Version: 2.0.0
 ;; Package-Requires: ((emacs "25.2"))
 ;; Keywords: lustre
 
@@ -76,7 +76,7 @@
 
 ;;; Code:
 
-(defconst lustre-mode-version "2.1")
+(defconst lustre-mode-version "2.0.0")
 
 ;;;; Requirements
 
@@ -218,7 +218,7 @@
 ;;;; Functions
 
 ;;; indentation code ----------------------------------------------
-(defun lustre-mode-indent-decl ()
+(defun lustre-mode--indent-decl ()
   "Returns the indentation of a declaration line. "
   (let ((result 2))
     (save-excursion
@@ -236,7 +236,7 @@
 
 
 
-(defun lustre-mode-get-beginning-of-line (&optional arg)
+(defun lustre-mode--get-beginning-of-line (&optional arg)
   "Returns position of the first non-space char of the current line,
    or line (arg - 1) if optional argument is given."
   (save-excursion
@@ -246,27 +246,27 @@
       (let ((fin (point)))
         (- fin deb)))))
 
-(defun lustre-mode-get-point-of-line ()
+(defun lustre-mode--get-point-of-line ()
   "Returns position of the first char of the current line."
   (save-excursion
     (beginning-of-line)
     (point)))
 
-(defun lustre-mode-skip-comments ()
+(defun lustre-mode--skip-comments ()
   "set point before the commentary of the current line (if any)."
   (beginning-of-line)
   (while (not (or (looking-at "$")
 		  (looking-at "--")))
     (forward-char 1)))
 
-(defun lustre-mode-line-is-comment (&optional arg)
+(defun lustre-mode--line-is-comment (&optional arg)
   "non-nil means line is only a commentary."
   (save-excursion
     (beginning-of-line arg)
     (skip-chars-forward " \t")
     (looking-at "--")))
 
-(defun lustre-mode-line-is-decl ()
+(defun lustre-mode--line-is-decl ()
   "non-nil means current line is a declaration. "
   (save-excursion
     (let ((res nil)
@@ -276,7 +276,7 @@
 	    (setq continue nil))
 	(re-search-backward
 	 "\\<\\(const\\|let\\|node\\|var\\|type\\|function\\)\\>" 1 t)
-	(if (not (lustre-mode-line-is-comment))
+	(if (not (lustre-mode--line-is-comment))
 	    (setq continue nil)))
       (if (looking-at "\\<\\(const\\|type\\|var\\)\\>")
 	  (setq res t))
@@ -285,29 +285,29 @@
       res)))
 
 
-(defun lustre-mode-in-comment ()
+(defun lustre-mode--in-comment ()
   "non-nil means point is inside a comment."
   (save-excursion
-    (re-search-backward "--" (lustre-mode-get-point-of-line) t)))
+    (re-search-backward "--" (lustre-mode--get-point-of-line) t)))
 
-(defun lustre-mode-skip-commentary-lines ()
+(defun lustre-mode--skip-commentary-lines ()
   "set point to the beginnig of the first non-commemtary line before
    the current line."
   (forward-line -1)
-  (while (and (lustre-mode-line-is-comment) (> (point) 1))
+  (while (and (lustre-mode--line-is-comment) (> (point) 1))
     (forward-line -1)))
 
-(defun lustre-mode-indent (level)
+(defun lustre-mode--indent (level)
   "Indents current line ."
   (beginning-of-line)
-  (delete-char (lustre-mode-get-beginning-of-line))
+  (delete-char (lustre-mode--get-beginning-of-line))
   (let ((ind level))
     (while (> ind 0)
       (insert " ")
       (setq ind (- ind 1)))))
 
 
-(defun lustre-mode-find-noindent-reg ()
+(defun lustre-mode--find-noindent-reg ()
   "non-nil means current line begins with:
    const, function, include, let, var, tel, node, returns, type."
   (save-excursion
@@ -317,10 +317,10 @@
      (looking-at
 
 "\\<\\(const\\|function\\|include\\|let\\|node\\|returns\\|tel\\|type\\|var\\)\\>")
-     (not (lustre-mode-in-comment)))))
+     (not (lustre-mode--in-comment)))))
 
 
-(defun lustre-mode-find-unmatching-parent ()
+(defun lustre-mode--find-unmatching-parent ()
   "Looks for an unmatched parenthese, and returns its position.
    (or nil if there isn't any). "
   (let ((continue t)
@@ -336,9 +336,9 @@
         (setq beg (point))
 	(end-of-line)
         (while (and (not (looking-at "^")) continue)
-          (if (and (looking-at ")") (not (lustre-mode-in-comment)))
+          (if (and (looking-at ")") (not (lustre-mode--in-comment)))
               (setq count-parent (- count-parent 1))
-            (if (and (looking-at "(") (not (lustre-mode-in-comment)))
+            (if (and (looking-at "(") (not (lustre-mode--in-comment)))
                 (progn
                   (setq count-parent (+ count-parent 1))
                   (if (= count-parent 1)
@@ -348,7 +348,7 @@
 	  (forward-char -1))
 	(skip-chars-forward " \t")
 	(if (and (looking-at "\\<const\\|var\\|type\\|node\\|function\\>")
-		 (not (lustre-mode-in-comment)))
+		 (not (lustre-mode--in-comment)))
 	    (setq continue nil))
 	(beginning-of-line)
 	(if (= (point) 1)
@@ -356,14 +356,14 @@
     result))
 
 
-(defun lustre-mode-indent-normal ()
+(defun lustre-mode--indent-normal ()
   "non-nil means indent normally."
   (save-excursion
     (beginning-of-line)
     (skip-chars-forward " \t")
     (looking-at "[]a-zA-Z0-9^[()]+")))
 
-(defun lustre-mode-empty-line ()
+(defun lustre-mode--empty-line ()
   "non-nil means line is empty."
   (save-excursion
     (skip-chars-forward " \t")
@@ -371,105 +371,105 @@
 
 
 
-(defun lustre-mode-compute-indent ()
+(defun lustre-mode--compute-indent ()
   "Returns indentation of current line."
   (cond
    ; if line is comment
-   ((lustre-mode-line-is-comment) lustre-mode-comment-ind-level)
+   ((lustre-mode--line-is-comment) lustre-mode-comment-ind-level)
    ; if line begins with node,include...
-   ((lustre-mode-find-noindent-reg) 0)
+   ((lustre-mode--find-noindent-reg) 0)
    ; if line begins with 'then' or 'else'
-   ((lustre-mode-find-then-else-beg) (lustre-mode-indent-then-else-beg))
+   ((lustre-mode--find-then-else-beg) (lustre-mode--indent-then-else-beg))
    ; if previous line ends with 'then' or 'else'
-   ((lustre-mode-find-then-else-end) (+ (lustre-mode-indent-then-else-end) 2))
+   ((lustre-mode--find-then-else-end) (+ (lustre-mode--indent-then-else-end) 2))
    ; looks for an unmatched parenthese
-   ((lustre-mode-find-unmatching-parent) (+ (lustre-mode-find-unmatching-parent) 1))
+   ((lustre-mode--find-unmatching-parent) (+ (lustre-mode--find-unmatching-parent) 1))
    ; if line is a declaration
-   ((lustre-mode-line-is-decl) (lustre-mode-indent-decl))
+   ((lustre-mode--line-is-decl) (lustre-mode--indent-decl))
    ; if previous line ends with '->'
-   ((lustre-mode-find-arrow) (lustre-mode-indent-arrow-equal-bool))
+   ((lustre-mode--find-arrow) (lustre-mode--indent-arrow-equal-bool))
    ; if previous line ends with '='
-   ((lustre-mode-find-equal-end) (lustre-mode-indent-arrow-equal-bool))
+   ((lustre-mode--find-equal-end) (lustre-mode--indent-arrow-equal-bool))
    ; if previous line ends with a boolean operator
-   ((lustre-mode-find-bool-expr-end) (lustre-mode-indent-arrow-equal-bool))
+   ((lustre-mode--find-bool-expr-end) (lustre-mode--indent-arrow-equal-bool))
    ; if line is a 'normal line'
-   ((lustre-mode-indent-normal) 2)
+   ((lustre-mode--indent-normal) 2)
    ; line is empty
-   ((lustre-mode-empty-line) 2)
+   ((lustre-mode--empty-line) 2)
    ; else ...
    (t 0)))
 
 
-(defun lustre-mode-find-arrow ()
+(defun lustre-mode--find-arrow ()
   "non-nil means previous line ends with '->' ."
   (save-excursion
-    (lustre-mode-skip-commentary-lines)
-    (lustre-mode-skip-comments)
+    (lustre-mode--skip-commentary-lines)
+    (lustre-mode--skip-comments)
     (skip-chars-backward " \t")
     (forward-char -2)
-    (and (looking-at "->") (not (lustre-mode-in-comment)))))
+    (and (looking-at "->") (not (lustre-mode--in-comment)))))
 
 
-(defun lustre-mode-indent-arrow-equal-bool ()
+(defun lustre-mode--indent-arrow-equal-bool ()
   "Find the level of indentation when previous line ends with '->',
 '='
    or a boolean (or, xor, and)."
   (save-excursion
-    (lustre-mode-skip-commentary-lines)
-    (+ (lustre-mode-get-beginning-of-line) 2)))
+    (lustre-mode--skip-commentary-lines)
+    (+ (lustre-mode--get-beginning-of-line) 2)))
 
 
-(defun lustre-mode-find-bool-expr-end ()
+(defun lustre-mode--find-bool-expr-end ()
   "non-nil means last line ends with 'and', 'xor' or 'or'."
   (let ((result nil))
     (save-excursion
-      (lustre-mode-skip-commentary-lines)
-      (lustre-mode-skip-comments)
+      (lustre-mode--skip-commentary-lines)
+      (lustre-mode--skip-comments)
       (skip-chars-backward " \t")
       (forward-char -2)
       (setq result (and (looking-at "\\<or\\>")
-			(not (lustre-mode-in-comment))))
+			(not (lustre-mode--in-comment))))
       (forward-char -1)
       (or (and (looking-at "\\<\\(and\\|not\\|xor\\)\\>")
-	       (not (lustre-mode-in-comment)))
+	       (not (lustre-mode--in-comment)))
 
 	  result))))
 
 
-(defun lustre-mode-find-then-else-beg ()
+(defun lustre-mode--find-then-else-beg ()
   "non-nil means current line begins with 'then' or 'else' ."
   (save-excursion
     (beginning-of-line)
     (skip-chars-forward " \t")
     (and (looking-at "\\<\\(else\\|then\\)\\>")
-	 (not (lustre-mode-in-comment)))))
+	 (not (lustre-mode--in-comment)))))
 
 
-(defun lustre-mode-find-then-else-end ()
+(defun lustre-mode--find-then-else-end ()
   "non-nil means last line ends with 'then' or 'else'."
   (save-excursion
-    (lustre-mode-skip-commentary-lines)
-    (lustre-mode-skip-comments)
+    (lustre-mode--skip-commentary-lines)
+    (lustre-mode--skip-comments)
     (skip-chars-backward " \t")
     (forward-char -4)
     (and (looking-at "\\<\\(else\\|then\\)\\>")
-	 (not (lustre-mode-in-comment)))))
+	 (not (lustre-mode--in-comment)))))
 
 
 
-(defun lustre-mode-find-equal-end ()
+(defun lustre-mode--find-equal-end ()
   "non-nil means last line ends with '=' ."
   (save-excursion
-    (lustre-mode-skip-commentary-lines)
-    (lustre-mode-skip-comments)
+    (lustre-mode--skip-commentary-lines)
+    (lustre-mode--skip-comments)
     (skip-chars-backward " \t")
     (forward-char -1)
     (and (looking-at "=")
-	 (not (lustre-mode-in-comment)))))
+	 (not (lustre-mode--in-comment)))))
 
 
 
-(defun lustre-mode-indent-then-else-beg ()
+(defun lustre-mode--indent-then-else-beg ()
   "Returns the level of indentation of a line beginning with
    'then' or 'else'."
   (let ((beg nil)
@@ -479,22 +479,22 @@
     (save-excursion
       (beginning-of-line)
       (skip-chars-forward " \t")
-      (if (and (looking-at "\\<then\\>") (not (lustre-mode-in-comment)))
+      (if (and (looking-at "\\<then\\>") (not (lustre-mode--in-comment)))
           (while continue
-            (lustre-mode-skip-commentary-lines)
+            (lustre-mode--skip-commentary-lines)
 	    (setq beg (point))
-	    (lustre-mode-skip-comments)
+	    (lustre-mode--skip-comments)
             (skip-chars-forward " \t")
 	    (if (and (looking-at "\\<node\\|function\\>")
-		     (not (lustre-mode-in-comment)))
+		     (not (lustre-mode--in-comment)))
 		(setq continue nil))
 	    (end-of-line)
             (while (and (not (looking-at "^")) continue)
               (if (and (looking-at "\\<then\\>")
-		       (not (lustre-mode-in-comment)))
+		       (not (lustre-mode--in-comment)))
                   (setq count-expr (- count-expr 1))
                 (if (and (looking-at "\\<\\(if\\|with\\)\\>")
-			 (not (lustre-mode-in-comment)))
+			 (not (lustre-mode--in-comment)))
 		    (progn
                       (setq count-expr (+ count-expr 1))
                       (if (and (= count-expr 1) continue)
@@ -504,20 +504,20 @@
               (forward-char -1)))
 	(if (looking-at "\\<else\\>")
             (while continue
-	      (lustre-mode-skip-commentary-lines)
+	      (lustre-mode--skip-commentary-lines)
 	      (setq beg (point))
-	      (lustre-mode-skip-comments)
+	      (lustre-mode--skip-comments)
 	      (skip-chars-forward " \t")
 	      (if (and (looking-at "\\<node\\|function\\>")
-		       (not (lustre-mode-in-comment)))
+		       (not (lustre-mode--in-comment)))
 		  (setq continue nil))
 	      (end-of-line)
 	      (while (and (not (looking-at "^")) continue)
 		(if (and (looking-at "\\<else\\>")
-			 (not (lustre-mode-in-comment)))
+			 (not (lustre-mode--in-comment)))
 		    (setq count-expr (- count-expr 1))
 		  (if (and (looking-at "\\<\\(if\\|with\\)\\>")
-			   (not (lustre-mode-in-comment)))
+			   (not (lustre-mode--in-comment)))
 		      (progn
 			(setq count-expr (+ count-expr 1))
 			(if (and (= count-expr 1) continue)
@@ -528,7 +528,7 @@
     result))
 
 
-(defun lustre-mode-indent-then-else-end ()
+(defun lustre-mode--indent-then-else-end ()
   "Returns the level of indentation of a line ending with 'then' or
 'else'."
   (let ((beg nil)
@@ -536,11 +536,11 @@
         (count-expr 1)
         (continue t))
     (save-excursion
-      (lustre-mode-skip-commentary-lines)
-      (lustre-mode-skip-comments)
+      (lustre-mode--skip-commentary-lines)
+      (lustre-mode--skip-comments)
       (skip-chars-backward " \t")
       (forward-char -4)
-      (if (and (looking-at "\\<then\\>") (not (lustre-mode-in-comment)))
+      (if (and (looking-at "\\<then\\>") (not (lustre-mode--in-comment)))
           (progn
             (forward-line 1)
             (while continue
@@ -548,15 +548,15 @@
               (setq beg (point))
               (skip-chars-forward " \t")
 	      (if (and (looking-at "\\<node\\|function\\>")
-		       (not (lustre-mode-in-comment)))
+		       (not (lustre-mode--in-comment)))
 		  (setq continue nil))
 	      (end-of-line)
               (while (and (not (looking-at "^")) continue)
                 (if (and (looking-at "\\<then\\>")
-			 (not (lustre-mode-in-comment)))
+			 (not (lustre-mode--in-comment)))
 		    (setq count-expr (- count-expr 1))
                   (if (and (looking-at "\\<\\(if\\|with\\)\\>")
-			   (not (lustre-mode-in-comment)))
+			   (not (lustre-mode--in-comment)))
 		      (progn
                         (setq count-expr (+ count-expr 1))
                         (if (and (= count-expr 1) continue)
@@ -564,7 +564,7 @@
                               (setq continue nil)
                               (setq result (- (point) beg)))))))
                 (forward-char -1))))
-        (if (and (looking-at "\\<else\\>") (not (lustre-mode-in-comment)))
+        (if (and (looking-at "\\<else\\>") (not (lustre-mode--in-comment)))
             (progn
               (forward-line 1)
               (while continue
@@ -572,15 +572,15 @@
 		(setq beg (point))
 		(skip-chars-forward " \t")
 		(if (and (looking-at "\\<node\\|function\\>")
-			 (not (lustre-mode-in-comment)))
+			 (not (lustre-mode--in-comment)))
 		    (setq continue nil))
 		(end-of-line)
 		(while (and (not (looking-at "^")) continue)
 		  (if (and (looking-at "\\<else\\>")
-			   (not (lustre-mode-in-comment)))
+			   (not (lustre-mode--in-comment)))
 		      (setq count-expr (- count-expr 1))
 		    (if (and (looking-at "\\<\\(if\\|with\\)\\>")
-			     (not (lustre-mode-in-comment)))
+			     (not (lustre-mode--in-comment)))
 			(progn
 			  (setq count-expr (+ count-expr 1))
 			  (if (and (= count-expr 1) continue)
@@ -629,7 +629,7 @@
   (let ((mark (make-marker)))
     (set-marker mark (point))
     (beginning-of-line)
-    (lustre-mode-indent (lustre-mode-compute-indent))
+    (lustre-mode--indent (lustre-mode--compute-indent))
     (goto-char (marker-position mark))
     (set-marker mark nil)
     )
