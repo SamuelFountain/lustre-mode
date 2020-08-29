@@ -28,6 +28,17 @@
   # If you installed from MELPA, you're done.  Just run one of the commands below.
 TODO add to MELPA
 
+** straight.el
+If you wish to use the straight package manager add the following to your configuration file.
+
+   #+begin_src emacs-lisp
+     (straight-use-package lustre-mode
+       :straight (:host github :repo "SamuelFountain/lustre-mode")
+       :init
+       (setq auto-mode-alist (cons '("\\.lus\\'" . lustre-mode) auto-mode-alist))
+       (autoload 'lustre-mode "lustre" "Edition de code lustre" t))
+   #+end_src
+
 ** Manual
 Put this file in your load-path
 
