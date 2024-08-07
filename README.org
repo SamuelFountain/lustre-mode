@@ -76,12 +76,14 @@ file run with either ~C-c C-r~ or ~f10~
 + You can customize settings in the lustre-mode group.
 
 *** lustre-mode-comment-ind-level
-Is a setting that determins how many spaces to indent a comment.
+Is a setting that determines how many spaces to indent a comment.
 
 *** lustre-mode-executer-name
 Name of the lustre executor. Defaults to jkind. Assumes that jkind in in your path.
 
 [[http://loonwerks.com/tools/jkind.html][Jkind Loonwerks]]
+*** lustre-mode-extra-args
+List of extra arguments to be passed to the lustre executor. Should be a list of strings.
 * Changelog
 :PROPERTIES:
 :TOC:      :depth 0
